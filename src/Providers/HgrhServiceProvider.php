@@ -36,9 +36,7 @@ class HgrhServiceProvider extends ServiceProvider
         Blade::componentNamespace('Bishopm\\Hgrh\\Resources\\Views\\Components', 'hgrh');
         Config::set('auth.providers.users.model','Bishopm\Hgrh\Models\User');
         Relation::morphMap([
-            'blog' => 'Bishopm\Hgrh\Models\Post',
-            'liturgy' => 'Bishopm\Hgrh\Models\Prayer',            
-            'video' => 'Bishopm\Hgrh\Models\Video'
+            'document' => 'Bishopm\Hgrh\Models\Document'
         ]);
     }
 
