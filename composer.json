@@ -1,0 +1,42 @@
+{
+    "name": "bishopm/hgrh",
+    "description": "Laravel and Filament based docs PWA",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Bishop",
+            "email": "michael@lightworx.co.za",
+            "homepage": "http://lightworx.co.za"
+        }
+    ],
+    "homepage": "https://github.com/bishopm/hgrh",
+    "keywords": ["Laravel", "Filament"],
+    "require": {
+        "illuminate/support": "~12",
+        "filament/filament": "~4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bishopm\\Hgrh\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bishopm\\Hgrh\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bishopm\\Hgrh\\Providers\\HgrhServiceProvider"
+            ],
+            "aliases": {
+                "Hgrh": "Bishopm\\Hgrh\\Facades\\Hgrh"
+            }
+        }
+    }
+}
