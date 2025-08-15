@@ -1,5 +1,6 @@
 <?php namespace Bishopm\Hgrh\Providers;
 
+use Bishopm\Hgrh\Classes\GeneralSettings;
 use Bishopm\Hgrh\Http\Middleware\AdminRoute;
 use Bishopm\Hgrh\Livewire\Search;
 use Illuminate\Support\ServiceProvider;
@@ -26,15 +27,13 @@ class HgrhServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
-        if (Schema::hasTable('settings')) {
-            Config::set('app.name',setting('LearningChurch')); 
-        }
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
         Livewire::component('search', Search::class);
         Blade::componentNamespace('Bishopm\\Hgrh\\Resources\\Views\\Components', 'hgrh');
         Config::set('auth.providers.users.model','Bishopm\Hgrh\Models\User');
+        Config::set('settings.settings', GeneralSettings::class);
         Relation::morphMap([
             'document' => 'Bishopm\Hgrh\Models\Document'
         ]);
