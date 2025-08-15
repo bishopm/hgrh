@@ -13,7 +13,8 @@
     "keywords": ["Laravel", "Filament"],
     "require": {
         "illuminate/support": "~12",
-        "filament/filament": "~4"
+        "filament/filament": "~4",
+        "filament/spatie-laravel-settings-plugin": "~3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

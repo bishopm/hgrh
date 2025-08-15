@@ -1,4 +1,4 @@
-<x-hgrh::layouts.web pageName="Home">
+<x-hgrh::layouts.app pageName="Home">
     <!-- Most recent posts -->
     <section id="trending-category" class="trending-category section">
         <div class="container" data-aos="fade-up" data-aos-delay="100">
