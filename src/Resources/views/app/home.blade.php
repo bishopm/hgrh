@@ -16,11 +16,11 @@
             </div>
         </div>
     </div>
-    
+    @livewire('search')
     <script>
         function refresh() {
             console.log('refreshing');
-            setCookie("wmc-version", "{{setting('general.app_version')}}", 365);
+            setCookie("hgrh-version", "{{setting('app_version')}}", 365);
             window.location.reload();
         }
 
@@ -32,8 +32,8 @@
         }
 
         window.addEventListener('load', function() {
-            let version = getCookie("wmc-version");
-            newversion = "{{setting('general.app_version')}}";
+            let version = getCookie("hgrh-version");
+            newversion = "{{setting('app_version')}}";
             if (version !== newversion){
                 var modal = new bootstrap.Modal(document.getElementById('versionModal'))
                 modal.show();

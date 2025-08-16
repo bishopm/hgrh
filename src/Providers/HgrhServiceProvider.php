@@ -1,6 +1,5 @@
 <?php namespace Bishopm\Hgrh\Providers;
 
-use Bishopm\Hgrh\Classes\GeneralSettings;
 use Bishopm\Hgrh\Http\Middleware\AdminRoute;
 use Bishopm\Hgrh\Livewire\Search;
 use Illuminate\Support\ServiceProvider;
@@ -33,7 +32,17 @@ class HgrhServiceProvider extends ServiceProvider
         Livewire::component('search', Search::class);
         Blade::componentNamespace('Bishopm\\Hgrh\\Resources\\Views\\Components', 'hgrh');
         Config::set('auth.providers.users.model','Bishopm\Hgrh\Models\User');
-        Config::set('settings.settings', GeneralSettings::class);
+        if (env('APP_ENV')=="local"){
+            $this->publishes([
+                __DIR__.'/../Resources/pwa/local_manifest.json' => public_path('manifest.json'),
+                __DIR__.'/../Resources/pwa/local_serviceworker.js' => public_path('serviceworker.js'),
+            ]);
+        } else {
+            $this->publishes([
+                __DIR__.'/../Resources/pwa/manifest.json' => public_path('manifest.json'),
+                __DIR__.'/../Resources/pwa/serviceworker.js' => public_path('serviceworker.js'),
+            ]);
+        }
         Relation::morphMap([
             'document' => 'Bishopm\Hgrh\Models\Document'
         ]);
@@ -46,7 +55,9 @@ class HgrhServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        
+        foreach (glob(__DIR__ . '/../Helpers/*.php') as $filename) {
+            require_once $filename;
+        }
     }
 
     /**

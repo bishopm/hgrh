@@ -9,7 +9,7 @@ class HomeController extends Controller
 
     public function home()
     {
-        $data=Document::orderBy('document')->get();        
+        $data['docs']=Document::orderBy('document')->get();        
         return view('hgrh::app.home',$data);
     }
 }

@@ -22,6 +22,10 @@ trait Taggable
         return $query->withWhereHas('tags', function ($q) use ($tag) { $q->where('name', '=', $tag); });
     }
 
+    public function scopeWithTagpart($query, $part){
+        return $query->withWhereHas('tags', function ($q) use ($part) { $q->where('name', 'like', '%' . $part . '%'); });
+    }
+
     public function scopeWithTags($query, $tags){
         $alltags=[];
         foreach ($tags as $tag){

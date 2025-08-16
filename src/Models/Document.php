@@ -2,14 +2,18 @@
 
 namespace Bishopm\Hgrh\Models;
 
-use Bishopm\Hgrh\Traits\Taggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Document extends Model
 {
-    use Taggable;
     
     public $table = 'documents';
     protected $guarded = ['id'];
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 
 }
