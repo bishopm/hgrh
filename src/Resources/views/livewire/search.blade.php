@@ -7,7 +7,7 @@
                     {{$doc->document}}
                 </a>
                 @foreach ($doc->tags as $tag)
-                    &nbsp;<span class="badge bg-primary">{{$tag->name}}</span>
+                    &nbsp;<span class="badge bg-primary"><a style="text-decoration:none; color:white;" href="#" wire:click="tagsearch('{{$tag->slug}}')">{{$tag->name}}</a></span>
                 @endforeach
             </li>
         @endforeach

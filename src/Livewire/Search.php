@@ -16,6 +16,11 @@ class Search extends Component
         $this->results['documents']=Document::orderBy('document')->get();
     }
 
+    public function tagsearch($slug){
+        $tag=Tag::with('documents')->whereSlug($slug)->first();
+        $this->results['documents']=$tag->documents;
+    }
+
     public function updatedQuery(){
         if (strlen($this->query) > 1){
             $this->results['documents']=Document::with('tags')->where('document','like','%' . $this->query . '%')

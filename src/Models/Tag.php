@@ -17,6 +17,6 @@ class Tag extends Model
 
     public function documents(): MorphToMany
     {
-        return $this->morphedByMany(Documentt::class, 'taggable');
+        return $this->morphedByMany(Document::class, 'taggable');
     }
 }

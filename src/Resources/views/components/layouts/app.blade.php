@@ -68,7 +68,7 @@
       <button class="navbar-toggler" style="padding:0; border:0;" type="button" data-bs-toggle="collapse" data-bs-target="#appMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <h2 class="text-white ms-auto pt-2"><a href="{{route('home')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i>{{setting('general.church_abbreviation')}}</a></h2>      
+      <h2 class="text-white ms-auto pt-2"><a href="{{route('home')}}"><i class="bi bi-house text-white" style="font-size:1.5rem;" ></i></a></h2>      
       <div class="collapse navbar-collapse" id="appMenu">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
@@ -76,11 +76,11 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Connecting
+              Help
             </a>
             <div class="dropdown-menu mb-2" aria-labelledby="navbarDropdown">   
-              <a class="dropdown-item" href="#">Coming up at </a>          
-              <a class="dropdown-item" href="#">Groups</a>
+              <a class="dropdown-item" href="#">Docs</a>          
+              <a class="dropdown-item" href="#">Video</a>
             </div>
           </li>
           <div class="dropdown-divider" style="color:grey; border:solid 1px;"></div>
@@ -103,9 +103,6 @@
   <div class="row fixed-bottom bg-dark text-white">
     <div class="col-1"></div>
     <div class="col-10 text-center py-3 d-flex justify-content-between">
-      <a href="#"><i class="bi bi-book-fill text-white"></i></a>
-      <a href="#"><i class="bi bi-mic text-white"></i></a>
-      <a href="#"><i class="bi bi-calendar-week text-white"></i></a>
     </div>
     <div class="col-1"></div>
   </div>
