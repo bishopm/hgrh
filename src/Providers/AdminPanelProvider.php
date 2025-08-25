@@ -2,6 +2,7 @@
 
 namespace Bishopm\Hgrh\Providers;
 
+use Bishopm\Hgrh\Filament\Widgets\RecentDocs;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -38,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: base_path('vendor/bishopm/hgrh/src/Filament/Widgets'), for: 'Bishopm\Hgrh\Filament\Widgets')
             ->widgets([
+                RecentDocs::class
             ])
             ->middleware([
                 EncryptCookies::class,
