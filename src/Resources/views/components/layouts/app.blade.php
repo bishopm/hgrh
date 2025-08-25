@@ -85,7 +85,7 @@
           </li>
           <div class="dropdown-divider" style="color:grey; border:solid 1px;"></div>
           <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
+            <a class="nav-link" href="{{url('/admin')}}">Login</a>
           </li>
         </ul>
       <div>
