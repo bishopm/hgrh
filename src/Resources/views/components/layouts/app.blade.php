@@ -91,7 +91,7 @@
       <div>
     </div>
   </nav>
-  <main class="main" style="padding-top:70px; padding-left:10px; padding-right:10px; padding-bottom:90px;">  
+  <main class="main" style="padding-top:75px; padding-left:10px; padding-right:10px; padding-bottom:90px;">  
     @if (session()->has('message'))
       <div class="alert alert-success alert-dismissible fade show" role="alert">  
         <p>{{ session('message') }}</p>          
@@ -102,7 +102,8 @@
   </main>
   <div class="row fixed-bottom bg-dark text-white">
     <div class="col-1"></div>
-    <div class="col-10 text-center py-3 d-flex justify-content-between">
+    <div class="col-10 text-center py-3">
+      <small>&copy;{{date('Y')}} HGRH</small>
     </div>
     <div class="col-1"></div>
   </div>

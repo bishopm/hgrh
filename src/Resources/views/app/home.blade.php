@@ -7,7 +7,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Please click OK to update your app to version xx
+                    Please click OK to update your app to version {{setting('app_version')}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" onclick="refresh();" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
