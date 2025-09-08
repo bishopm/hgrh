@@ -16,7 +16,22 @@
             </div>
         </div>
     </div>
-    @livewire('search')
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-browse-tab" data-bs-toggle="pill" data-bs-target="#pills-browse" type="button" role="tab" aria-controls="pills-browse" aria-selected="true">Browse</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-search-tab" data-bs-toggle="pill" data-bs-target="#pills-search" type="button" role="tab" aria-controls="pills-search" aria-selected="false">Search</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-browse" role="tabpanel" aria-labelledby="pills-browse-tab">
+            @livewire('filebrowser')
+        </div>
+        <div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
+            @livewire('search')
+        </div>
+    </div>
     <script>
         function refresh() {
             console.log('refreshing');

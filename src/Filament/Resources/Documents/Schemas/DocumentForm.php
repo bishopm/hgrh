@@ -2,7 +2,7 @@
 
 namespace Bishopm\Hgrh\Filament\Resources\Documents\Schemas;
 
-use Bishopm\Hgrh\Filament\Fields\FileBrowser;
+use Bishopm\Hgrh\Forms\FilePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
@@ -25,7 +25,7 @@ class DocumentForm
                     ->required(),
                 FileUpload::make('file')
                     ->required(),
-                FileBrowser::make('filename'),
+                FilePicker::make('filename'),
                 RichEditor::make('description')
                     ->columnSpanFull(),
                 Select::make('tags')->label('Subject tags')
