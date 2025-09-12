@@ -3,7 +3,6 @@
 namespace Bishopm\Hgrh\Forms;
 
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class FilePicker extends Field
 {

@@ -7,83 +7,114 @@ use Illuminate\Support\Facades\File;
 
 class FileBrowser extends Component
 {
-    public $currentDir = ''; // relative to public
+    public $currentDir = ''; // relative to baseDir
     public $files = [];
     public $breadcrumbs = [];
 
-    protected string $baseDir='';
+    protected string $baseDir = '';
 
     public function mount()
     {
-        $this->baseDir = public_path('storage'); // must exist
-        $this->currentDir = ''; // start at root
+        $this->baseDir = public_path('storage');
+
+        // Ensure baseDir exists
+        if (!File::exists($this->baseDir)) {
+            File::makeDirectory($this->baseDir, 0755, true);
+        }
+
+        $this->currentDir = ''; // root
         $this->loadFiles();
     }
 
+    /**
+     * Compute full absolute path from a relative path
+     */
     protected function fullPath(?string $relativePath): string
     {
-        $base = rtrim(str_replace('\\','/',$this->baseDir), '/');
+        $relativePath = trim((string) $relativePath, '/');
+        $dir = $this->baseDir . ($relativePath ? '/' . $relativePath : '');
+        $dir = str_replace('\\','/', $dir);
 
-        $relativePath = trim((string)$relativePath, '/');
-
-        $dir = $relativePath ? $base . '/' . $relativePath : $base;
-
-        // Normalize slashes and remove trailing slash
-        $dir = rtrim(str_replace('\\','/',$dir), '/');
-
-        // Security: prevent escaping baseDir
-        if (!str_starts_with($dir, $base)) {
+        // Security: cannot escape baseDir
+        if (!str_starts_with($dir, $this->baseDir)) {
             abort(403, 'Access denied');
         }
 
         return $dir;
     }
 
+    /**
+     * Load folders and files for the current directory
+     */
     public function loadFiles()
     {
-        $dir = $this->fullPath($this->currentDir);
+        $currentDir = trim((string) $this->currentDir, '/');
+        $dir = $this->fullPath($currentDir);
 
-        // Double-check existence
+        // fallback to baseDir if dir missing
         if (!File::exists($dir)) {
-            // fallback to baseDir if folder missing
             $dir = $this->baseDir;
+            $currentDir = '';
+            $this->currentDir = '';
         }
 
         $folders = collect([]);
         $files = collect([]);
 
         if (File::exists($dir)) {
+            // Folders
             $folders = collect(File::directories($dir))
-                ->map(fn($folder) => [
-                    'name' => basename($folder),
-                    'path' => ltrim(str_replace($this->baseDir, '', $folder), '/'),
-                    'isDir' => true,
-                ]);
+                ->map(function ($folder) {
+                    $folder = str_replace('\\','/',$folder);
+                    $relative = trim(str_replace($this->baseDir . '/', '', rtrim($folder,'/')), '/');
+                    return [
+                        'name' => basename($folder),
+                        'path' => $relative,
+                        'isDir' => true,
+                    ];
+                });
 
+            // Files
             $files = collect(File::files($dir))
-                ->map(fn($file) => [
-                    'name' => $file->getFilename(),
-                    'path' => ltrim(str_replace($this->baseDir, '', $file->getPathname()), '/'),
-                    'isDir' => false,
-                ]);
+                ->map(function ($file) {
+                    $filePath = str_replace('\\','/',$file->getPathname());
+                    $relative = trim(str_replace($this->baseDir . '/', '', $filePath), '/');
+                    return [
+                        'name' => $file->getFilename(),
+                        'path' => $relative ?: $file->getFilename(),
+                        'isDir' => false,
+                    ];
+                });
         }
 
         $this->files = $folders->merge($files)->values()->toArray();
 
         // Breadcrumbs
-        $this->breadcrumbs = collect(explode('/', $this->currentDir))
+        $this->breadcrumbs = collect(explode('/', $currentDir))
             ->filter()
             ->values()
             ->all();
     }
 
-
     public function navigateTo($path)
     {
-        $this->currentDir = ltrim($path, '/');
+        $path = trim((string) $path, '/');
+
+        if ($this->currentDir) {
+            // Append folder to current path
+            $this->currentDir = $this->currentDir . '/' . $path;
+        } else {
+            $this->currentDir = $path;
+        }
+
+        $this->currentDir = trim($this->currentDir, '/');
         $this->loadFiles();
     }
 
+
+    /**
+     * Go up one folder
+     */
     public function goUp()
     {
         if (!$this->currentDir) return;
@@ -94,6 +125,9 @@ class FileBrowser extends Component
         $this->loadFiles();
     }
 
+    /**
+     * Navigate via breadcrumb
+     */
     public function navigateBreadcrumb($index)
     {
         $parts = explode('/', $this->currentDir);
@@ -106,5 +140,4 @@ class FileBrowser extends Component
     {
         return view('hgrh::livewire.file-browser');
     }
-
 }

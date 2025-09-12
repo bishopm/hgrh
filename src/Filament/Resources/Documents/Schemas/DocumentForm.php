@@ -3,7 +3,6 @@
 namespace Bishopm\Hgrh\Filament\Resources\Documents\Schemas;
 
 use Bishopm\Hgrh\Forms\FilePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -23,9 +22,7 @@ class DocumentForm
                 TextInput::make('document')
                     ->label('Document name')
                     ->required(),
-                FileUpload::make('file')
-                    ->required(),
-                FilePicker::make('filename'),
+                FilePicker::make('file'),
                 RichEditor::make('description')
                     ->columnSpanFull(),
                 Select::make('tags')->label('Subject tags')
