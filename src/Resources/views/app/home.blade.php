@@ -16,6 +16,9 @@
             </div>
         </div>
     </div>
+    <button id="installbutton" class="btn btn-success" hidden>
+        <i class="bi bi-download"></i> Install App
+    </button>
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="pills-browse-tab" data-bs-toggle="pill" data-bs-target="#pills-browse" type="button" role="tab" aria-controls="pills-browse" aria-selected="true">Browse</button>
@@ -26,7 +29,7 @@
     </ul>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-browse" role="tabpanel" aria-labelledby="pills-browse-tab">
-            @livewire('filebrowser')
+            @livewire('file-browser')
         </div>
         <div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
             @livewire('search')
@@ -46,6 +49,30 @@
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
 
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function disableInAppInstallPrompt() {
+            installPrompt = null;
+            const installButton = document.querySelector("#installbutton");
+            if (installButton) {
+                installButton.setAttribute("hidden", "");
+            }
+        }
+
         window.addEventListener('load', function() {
             let version = getCookie("hgrh-version");
             newversion = "{{setting('app_version')}}";
@@ -57,45 +84,29 @@
             
             let installPrompt = null;
             const installButton = document.querySelector("#installbutton");
+            
             window.addEventListener("beforeinstallprompt", (event) => {
                 event.preventDefault();
                 installPrompt = event;
-                installButton.removeAttribute("hidden");
+                if (installButton) {
+                    installButton.removeAttribute("hidden");
+                }
             });
 
-            installButton.addEventListener("click", async () => {
-                if (!installPrompt) {
-                    return;
-                }
-                const result = await installPrompt.prompt();
-                console.log(`Install prompt was: ${result.outcome}`);
-                disableInAppInstallPrompt();
-            });
+            if (installButton) {
+                installButton.addEventListener("click", async () => {
+                    if (!installPrompt) {
+                        return;
+                    }
+                    const result = await installPrompt.prompt();
+                    console.log(`Install prompt was: ${result.outcome}`);
+                    disableInAppInstallPrompt();
+                });
+            }
 
             window.addEventListener("appinstalled", () => {
                 disableInAppInstallPrompt();
             });
-
-            function getCookie(cname) {
-                let name = cname + "=";
-                let decodedCookie = decodeURIComponent(document.cookie);
-                let ca = decodedCookie.split(';');
-                for(let i = 0; i <ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                    }
-                }
-                return "";
-            }
-
-            function disableInAppInstallPrompt() {
-                installPrompt = null;
-                installButton.setAttribute("hidden", "");
-            }
         })
     </script>
 </x-hgrh::layouts.app>

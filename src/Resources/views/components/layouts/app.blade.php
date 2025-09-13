@@ -47,11 +47,12 @@
   <!-- Tile for Win8 -->
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="{{ asset('hgrh/images/icons/icon-512x512.png') }}">
+  @livewireStyles
   <script type="text/javascript">
       // Initialize the service worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('{{ asset('serviceworker.js') }}?version={{setting("general.app_version")}}', {
-            scope: '/public/'
+            scope: '/'
         }).then(function (registration) {
             // Registration was successful
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
@@ -88,7 +89,12 @@
             <a class="nav-link" href="{{url('/admin')}}">Login</a>
           </li>
         </ul>
-      <div>
+      </div>
+      <div class="ms-auto">
+        <button id="installbutton" class="btn btn-success btn-sm" hidden>
+          <i class="bi bi-download"></i> Install App
+        </button>
+      </div>
     </div>
   </nav>
   <main class="main" style="padding-top:75px; padding-left:10px; padding-right:10px; padding-bottom:90px;">  
@@ -107,6 +113,7 @@
     </div>
     <div class="col-1"></div>
   </div>
+  @livewireScripts
   <script src="{{ asset('hgrh/js/bootstrap-bundle.min.js') }}"></script>
 </body>
 
