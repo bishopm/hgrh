@@ -5,82 +5,106 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
-Route::post('/file-browser-files', function (\Illuminate\Http\Request $request) {
-    $baseDir = public_path('storage');
-    $relativeDir = trim($request->input('dir', ''), '/');
-    $dir = $baseDir . ($relativeDir ? '/' . $relativeDir : '');
-    if (!\Illuminate\Support\Facades\File::exists($dir)) {
-        $dir = $baseDir;
-    }
-    $dir = str_replace('\\','/',$dir);
-    if (!str_starts_with($dir, str_replace('\\','/',$baseDir))) abort(403);
+// Define base storage dir for all routes
+$hgrhBase = storage_path('app/public/hgrh');
 
-    $folders = collect(\Illuminate\Support\Facades\File::directories($dir))
-        ->map(fn($f)=>['name'=>basename($f),'path'=>ltrim(str_replace($baseDir,'',$f),'/'),'isDir'=>true]);
-    $files = collect(\Illuminate\Support\Facades\File::files($dir))
-        ->map(fn($f)=>['name'=>$f->getFilename(),'path'=>ltrim(str_replace($baseDir,'',$f->getPathname()),'/'),'isDir'=>false]);
+Route::post('/file-browser-files', function (Request $request) use ($hgrhBase) {
+    $relativeDir = trim($request->input('dir', ''), '/');
+    $dir = $hgrhBase . ($relativeDir ? '/' . $relativeDir : '');
+
+    if (!File::exists($dir)) {
+        $dir = $hgrhBase;
+    }
+
+    $dir = str_replace('\\', '/', $dir);
+    if (!str_starts_with($dir, str_replace('\\', '/', $hgrhBase))) abort(403);
+
+    $folders = collect(File::directories($dir))
+        ->map(fn($f) => [
+            'name' => basename($f),
+            'path' => ltrim(str_replace($hgrhBase, '', $f), '/'),
+            'isDir' => true
+        ]);
+
+    $files = collect(File::files($dir))
+        ->map(fn($f) => [
+            'name' => $f->getFilename(),
+            'path' => ltrim(str_replace($hgrhBase, '', $f->getPathname()), '/'),
+            'isDir' => false
+        ]);
 
     return response()->json($folders->merge($files)->values());
 });
 
-Route::post('/file-browser-upload', function (\Illuminate\Http\Request $request) {
-    $baseDir = public_path('storage');
-    $relativeDir = trim($request->input('dir',''),'/');
-    $dir = $baseDir . ($relativeDir ? '/'.$relativeDir : '');
-    $dir = str_replace('\\','/',$dir);
-    if (!str_starts_with($dir, str_replace('\\','/',$baseDir))) abort(403);
-    if (!\Illuminate\Support\Facades\File::exists($dir)) \Illuminate\Support\Facades\File::makeDirectory($dir,0755,true);
+Route::post('/file-browser-upload', function (Request $request) use ($hgrhBase) {
+    $relativeDir = trim($request->input('dir', ''), '/');
+    $dir = $hgrhBase . ($relativeDir ? '/' . $relativeDir : '');
+    $dir = str_replace('\\', '/', $dir);
+
+    if (!str_starts_with($dir, str_replace('\\', '/', $hgrhBase))) abort(403);
+    if (!File::exists($dir)) File::makeDirectory($dir, 0755, true);
+
     $file = $request->file('file');
-    $file->move($dir,$file->getClientOriginalName());
-    return response()->json(['success'=>true]);
+    $file->move($dir, $file->getClientOriginalName());
+
+    return response()->json([
+        'success' => true,
+        'url' => asset('storage/hgrh/' . ($relativeDir ? $relativeDir . '/' : '') . $file->getClientOriginalName())
+    ]);
 });
 
-Route::post('/file-browser-create-folder', function (\Illuminate\Http\Request $request) {
-    $baseDir = public_path('storage');
-    $relativeDir = trim($request->input('dir',''),'/');
+Route::post('/file-browser-create-folder', function (Request $request) use ($hgrhBase) {
+    $relativeDir = trim($request->input('dir', ''), '/');
     $folder = $request->input('folder');
-    $dir = $baseDir . ($relativeDir ? '/'.$relativeDir : '');
-    $dir = str_replace('\\','/',$dir);
-    if (!str_starts_with($dir, str_replace('\\','/',$baseDir))) abort(403);
-    if ($folder) mkdir($dir.'/'.$folder,0755,true);
-    return response()->json(['success'=>true]);
+    $dir = $hgrhBase . ($relativeDir ? '/' . $relativeDir : '');
+    $dir = str_replace('\\', '/', $dir);
+
+    if (!str_starts_with($dir, str_replace('\\', '/', $hgrhBase))) abort(403);
+    if ($folder) mkdir($dir . '/' . $folder, 0755, true);
+
+    return response()->json(['success' => true]);
 });
 
-Route::post('/file-browser-delete', function (\Illuminate\Http\Request $request) {
-    $baseDir = public_path('storage');
-    $path = trim($request->input('path',''),'/');
-    $isDir = $request->input('isDir',false);
-    $fullPath = $baseDir.($path ? '/'.$path : '');
-    $fullPath = str_replace('\\','/',$fullPath);
-    if (!str_starts_with($fullPath,str_replace('\\','/',$baseDir))) abort(403);
+Route::post('/file-browser-delete', function (Request $request) use ($hgrhBase) {
+    $path = trim($request->input('path', ''), '/');
+    $isDir = $request->boolean('isDir', false);
+    $fullPath = $hgrhBase . ($path ? '/' . $path : '');
+    $fullPath = str_replace('\\', '/', $fullPath);
+
+    if (!str_starts_with($fullPath, str_replace('\\', '/', $hgrhBase))) abort(403);
+
     if ($isDir) {
-        if (count(\Illuminate\Support\Facades\File::files($fullPath))>0 || count(\Illuminate\Support\Facades\File::directories($fullPath))>0) {
-            return response()->json(['success'=>false,'message'=>'Folder not empty']);
+        if (count(File::files($fullPath)) > 0 || count(File::directories($fullPath)) > 0) {
+            return response()->json(['success' => false, 'message' => 'Folder not empty']);
         }
         rmdir($fullPath);
-    } else unlink($fullPath);
-    return response()->json(['success'=>true]);
+    } else {
+        unlink($fullPath);
+    }
+
+    return response()->json(['success' => true]);
 });
 
-Route::get('/file-browser', function (Request $request) {
+// Optional: keep if you need a GET endpoint
+Route::get('/file-browser', function (Request $request) use ($hgrhBase) {
     $relativeDir = trim($request->get('dir', ''), '/');
-    $dir = public_path($relativeDir);
+    $dir = $hgrhBase . ($relativeDir ? '/' . $relativeDir : '');
 
-    if (! str_starts_with($dir, public_path())) {
+    if (!str_starts_with($dir, $hgrhBase)) {
         abort(403);
     }
 
     $items = collect(File::directories($dir))
         ->map(fn($folder) => [
             'name' => basename($folder),
-            'path' => ltrim(str_replace(public_path(), '', $folder), '/'),
+            'path' => ltrim(str_replace($hgrhBase, '', $folder), '/'),
             'isDir' => true,
         ]);
 
     $files = collect(File::files($dir))
         ->map(fn($file) => [
             'name' => $file->getFilename(),
-            'path' => ltrim(str_replace(public_path(), '', $file->getPathname()), '/'),
+            'path' => ltrim(str_replace($hgrhBase, '', $file->getPathname()), '/'),
             'isDir' => false,
         ]);
 
@@ -91,5 +115,3 @@ Route::get('/file-browser', function (Request $request) {
 Route::middleware(['web'])->controller('\Bishopm\Hgrh\Http\Controllers\HomeController')->group(function () {
     Route::get('/', 'home')->name('home');
 });
-
-
