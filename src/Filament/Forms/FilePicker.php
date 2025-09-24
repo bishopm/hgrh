@@ -1,6 +1,6 @@
 <?php
 
-namespace Bishopm\Hgrh\Forms;
+namespace Bishopm\Hgrh\Filament\Forms;
 
 use Filament\Forms\Components\Field;
 

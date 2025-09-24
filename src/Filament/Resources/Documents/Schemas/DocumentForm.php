@@ -2,7 +2,7 @@
 
 namespace Bishopm\Hgrh\Filament\Resources\Documents\Schemas;
 
-use Bishopm\Hgrh\Forms\FilePicker;
+use Bishopm\Hgrh\Filament\Forms\FilePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
