@@ -15,9 +15,10 @@ class FileBrowser extends Component
     
     public function mount($path = '')
     {
-        $this->currentPath = $path;
+        $this->currentPath = $path ?: 'hgrh';
         $this->updateBreadcrumbs();
     }
+
     
     public function navigateToFolder($folderName)
     {
@@ -124,27 +125,25 @@ class FileBrowser extends Component
             
             // Get all document records for files in this directory for efficiency
             $fileNames = array_map('basename', $allFiles);
-            $pdfFileNames = array_filter($fileNames, fn($name) => Str::endsWith(strtolower($name), '.pdf'));
-            
-            $documents = Document::whereIn('file', $pdfFileNames)->get()->keyBy('file');
-            
+            $documents = Document::whereIn('file', $fileNames)->get()->keyBy('file');
+
             foreach ($allFiles as $file) {
                 $filename = basename($file);
-                
-                if (Str::endsWith(strtolower($filename), '.pdf')) {
-                    $document = $documents->get($filename);
-                    
-                    $files[] = [
-                        'filename' => $filename,
-                        'name' => $document ? $document->document : $filename,
-                        'description' => $document ? $document->description : null,
-                        'type' => 'file',
-                        'size' => $this->formatFileSize(Storage::disk('public')->size($file)),
-                        'modified' => date('Y-m-d H:i:s', Storage::disk('public')->lastModified($file)),
-                        'has_document_record' => $document !== null
-                    ];
-                }
+
+                $document = $documents->get($filename);
+                $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                $files[] = [
+                    'filename' => $filename,
+                    'name' => $document ? $document->document : $filename,
+                    'description' => $document ? $document->description : null,
+                    'type' => $extension,
+                    'size' => $this->formatFileSize(Storage::disk('public')->size($file)),
+                    'modified' => date('Y-m-d H:i:s', Storage::disk('public')->lastModified($file)),
+                    'has_document_record' => $document !== null,
+                ];
             }
+
         } catch (\Exception $e) {
             // Handle any storage errors gracefully
             session()->flash('error', 'Unable to access the requested directory: ' . $e->getMessage());
