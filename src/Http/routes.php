@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 // Define base storage dir for all routes
-$hgrhBase = storage_path('app/public/hgrh');
+$hgrhBase = storage_path('app/hgrh');
 
 Route::post('/file-browser-files', function (Request $request) use ($hgrhBase) {
     $relativeDir = trim($request->input('dir', ''), '/');

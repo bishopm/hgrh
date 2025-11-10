@@ -15,7 +15,7 @@ class FileBrowser extends Component
     
     public function mount($path = '')
     {
-        $this->currentPath = $path ?: 'hgrh';
+        $this->currentPath = $path;
         $this->updateBreadcrumbs();
     }
 
@@ -46,7 +46,7 @@ class FileBrowser extends Component
         // Check if file exists and is a PDF
         if (Storage::disk('public')->exists($filePath) && Str::endsWith(strtolower($fileName), '.pdf')) {
             // Generate the proper URL for the file
-            $fileUrl = asset('storage/' . $filePath);
+            $fileUrl = Storage::disk('public')->url($filePath);
             
             // Find the document record
             $document = Document::where('file', $fileName)->first();
