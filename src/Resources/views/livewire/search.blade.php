@@ -3,7 +3,7 @@
     <ul style="position:absolute; background-color:'#dfdfdf'; z-index:100;" class="list-unstyled">
         @foreach ($results['documents'] as $doc)
             <li>
-                <a style="text-decoration: none; color:blue" href="{{url('/storage/' . $doc->file)}}">
+                <a style="text-decoration: none; color:#006838" href="{{url('/storage/hgrh/' . $doc->file)}}">
                     {{$doc->document}}
                 </a>
                 @foreach ($doc->tags as $tag)
