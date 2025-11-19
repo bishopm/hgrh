@@ -59,11 +59,11 @@ class AdminPanelProvider extends PanelProvider
                 Action::make('settings')
                     ->url('/admin/settings')
                     ->icon('heroicon-o-cog-6-tooth'),
-                Action::make('website')
-                    ->label('Website')
+                Action::make('app')
+                    ->label('App')
                     ->url('/')
                     ->openUrlInNewTab()
-                    ->icon('heroicon-o-globe-alt'),
+                    ->icon('heroicon-o-device-tablet'),
             ]);
     }
 }

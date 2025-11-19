@@ -44,7 +44,7 @@ class FileBrowser extends Component
         $filePath = $this->currentPath ? $this->currentPath . '/' . $fileName : $fileName;
         
         // Check if file exists and is a PDF
-        if (Storage::disk('public')->exists($filePath) && Str::endsWith(strtolower($fileName), '.pdf')) {
+        if (Storage::disk('public')->exists($filePath)) {
             // Generate the proper URL for the file
             $fileUrl = Storage::disk('public')->url($filePath);
             

@@ -19,6 +19,7 @@
     <button id="installbutton" class="btn btn-success" hidden>
         <i class="bi bi-download"></i> Install App
     </button>
+    <img width="100%" src="{{ asset('hgrh/images/header.png') }}" />
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="pills-browse-tab" data-bs-toggle="pill" data-bs-target="#pills-browse" type="button" role="tab" aria-controls="pills-browse" aria-selected="true">Browse</button>
