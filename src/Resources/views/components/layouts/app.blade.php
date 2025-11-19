@@ -21,6 +21,10 @@
       :root {
     --bs-primary: #006838; /* optional, sets normal hex color */
     --bs-primary-rgb: 0, 104, 56; /* override RGB for rgba() usage */
+    --bs-nav-pills-link-active-bg: #006838;
+    --bs-nav-link-color: #006838;
+    --bs-btn-primary-bg: #006838;
+    --bs-btn-primary-border-color: #006838;
   }
   </style>
   
